@@ -40,7 +40,8 @@ def przyjmijRozkaz():
         query = r.recognize_google(audio, language = 'en')
         print(f"user said: {query}\n")
     except Exception as e:
-        print("Powtórz")
+        print("Repeat please")
+        speak("repeat please")
         przyjmijRozkaz()
     return query
 # Uruchamianie        
