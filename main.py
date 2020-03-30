@@ -43,26 +43,26 @@ def przyjmijRozkaz():
         print("Powtórz")
         przyjmijRozkaz()
     return query
-def ready():
-    przyjmijRozkaz()
-    ready()
 # Uruchamianie        
 #speak("Starting Anna...")
-Greeting()
-#
+#Greeting()
+
+
+  
 query = przyjmijRozkaz()
-wikipedia.set_lang("en")
+
+
 
 if 'wikipedia' in query.lower():
-    speak('Przeszukuję wikipedię...')
+    wikipedia.set_lang("en")
+    speak('Searching in wikipedia...')
     query = query.replace("wikipedia", "")
     results = wikipedia.summary(query, sentences =2)
     print(results)
     speak(results)
-
 elif 'open youtube' in query.lower():
     webbrowser.get('windows-default').open('http://www.youtube.com')
-    przyjmijRozkaz()
+    goto(56)
 elif 'open google' in query.lower():
     webbrowser.get('windows-default').open('http://www.google.com')
     przyjmijRozkaz()
@@ -78,12 +78,12 @@ elif 'play music' in query.lower():
             songs = os.listdir(songs_dir)
             os.startfile(os.path.join(songs_dir, songs[0]))
             f.close()
-            przyjmijRozkaz()
+            main()
         else:
             speak("Something wrong with the file")
             speak("setting file to read mode")
             f = open("songs.txt", "r")
-            przyjmijRozkaz()
+            main()
     except IOError:
         speak("File was not found. Do you want to show directory with your Music?")
         r = sr.Recognizer()
@@ -105,11 +105,11 @@ elif 'play music' in query.lower():
         f.close()
         songs = os.listdir(songs_dir)
         os.startfile(os.path.join(songs_dir, songs[0]))
-        ready()
+        main()
     if 'no' in query.lower():
-            przyjmijRozkaz()
+            main()
     else:
-        przyjmijRozkaz()
+        main()
 elif 'goodbye' in query.lower():
     speak("Goodbye")
 elif 'time' in query.lower():
