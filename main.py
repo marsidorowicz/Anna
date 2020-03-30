@@ -18,7 +18,7 @@ def speak(text):
     engine.say(text)
     engine.runAndWait()
 #Ustalanie powitania w zależności od pory dnia
-def wishMe():
+def Greeting():
     godzina = int(datetime.datetime.now().hour)
 
     if godzina>=0 and godzina < 12:
@@ -41,10 +41,14 @@ def przyjmijRozkaz():
         print(f"user said: {query}\n")
     except Exception as e:
         print("Powtórz")
+        przyjmijRozkaz()
     return query
+def ready():
+    przyjmijRozkaz()
+    ready()
 # Uruchamianie        
-#speak("Uruchamianie Anny...")
-#wishMe()
+#speak("Starting Anna...")
+Greeting()
 #
 query = przyjmijRozkaz()
 wikipedia.set_lang("en")
@@ -58,8 +62,10 @@ if 'wikipedia' in query.lower():
 
 elif 'open youtube' in query.lower():
     webbrowser.get('windows-default').open('http://www.youtube.com')
+    przyjmijRozkaz()
 elif 'open google' in query.lower():
     webbrowser.get('windows-default').open('http://www.google.com')
+    przyjmijRozkaz()
 elif 'play music' in query.lower():
     speak("Serching for music")
     try:
@@ -68,13 +74,18 @@ elif 'play music' in query.lower():
             songs_dir = f.read()
             speak("Songs found in")
             print(songs_dir)
-            speak("Playning music")
+            speak("Playing music")
             songs = os.listdir(songs_dir)
             os.startfile(os.path.join(songs_dir, songs[0]))
+            f.close()
+            przyjmijRozkaz()
         else:
             speak("Something wrong with the file")
+            speak("setting file to read mode")
+            f = open("songs.txt", "r")
+            przyjmijRozkaz()
     except IOError:
-        speak("File was not found. Do you want to show directory with Music?")
+        speak("File was not found. Do you want to show directory with your Music?")
         r = sr.Recognizer()
         with sr.Microphone() as source:
             audio = r.listen(source)
@@ -84,19 +95,31 @@ elif 'play music' in query.lower():
             query = r.recognize_google(audio, language = 'en')
             print(f"user said: {query}\n")
         except Exception as e:
-            print("Powtórz")
-    #return query
+            print("Repeat")
+            speak("repeat please")
     if 'yes' in query.lower():
         speak("Where is music?")
         songs_dir = input("Where is music? ")
         f = open("songs.txt", "w")
         f.write(songs_dir)
         f.close()
-        #return songs_dir
+        songs = os.listdir(songs_dir)
+        os.startfile(os.path.join(songs_dir, songs[0]))
+        ready()
     if 'no' in query.lower():
             przyjmijRozkaz()
     else:
         przyjmijRozkaz()
+elif 'goodbye' in query.lower():
+    speak("Goodbye")
+elif 'time' in query.lower():
+    time = datetime.datetime.now().strftime("%H:%M")
+    print("It is now " + time)
+    speak( "It is now " + time)
+    przyjmijRozkaz()
+else:
+    speak("Goodbye")
+
     
     
     
