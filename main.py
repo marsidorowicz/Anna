@@ -48,79 +48,78 @@ def przyjmijRozkaz():
 #Greeting()
 
 
-  
-query = przyjmijRozkaz()
+def main():
+     
+    query = przyjmijRozkaz()
 
 
 
-if 'wikipedia' in query.lower():
-    wikipedia.set_lang("en")
-    speak('Searching in wikipedia...')
-    query = query.replace("wikipedia", "")
-    results = wikipedia.summary(query, sentences =2)
-    print(results)
-    speak(results)
-elif 'open youtube' in query.lower():
-    webbrowser.get('windows-default').open('http://www.youtube.com')
-    goto(56)
-elif 'open google' in query.lower():
-    webbrowser.get('windows-default').open('http://www.google.com')
-    przyjmijRozkaz()
-elif 'play music' in query.lower():
-    speak("Serching for music")
-    try:
-        f = open("songs.txt", "r")
-        if f.mode == "r":
-            songs_dir = f.read()
-            speak("Songs found in")
-            print(songs_dir)
-            speak("Playing music")
+    if 'wikipedia' in query.lower():
+        wikipedia.set_lang("en")
+        speak('Searching in wikipedia...')
+        query = query.replace("wikipedia", "")
+        results = wikipedia.summary(query, sentences =2)
+        print(results)
+        speak(results)
+        main()
+    elif 'open youtube' in query.lower():
+        webbrowser.get('windows-default').open('http://www.youtube.com')
+        main()
+    elif 'open google' in query.lower():
+        webbrowser.get('windows-default').open('http://www.google.com')
+        main()
+    elif 'play music' in query.lower():
+        speak("Serching for music")
+        try:
+            f = open("songs.txt", "r")
+            if f.mode == "r":
+                songs_dir = f.read()
+                speak("Songs found in")
+                print(songs_dir)
+                speak("Playing music")
+                songs = os.listdir(songs_dir)
+                os.startfile(os.path.join(songs_dir, songs[0]))
+                f.close()
+                main()
+            else:
+                speak("Something wrong with the file")
+                speak("setting file to read mode")
+                f = open("songs.txt", "r")
+                main()
+        except IOError:
+            speak("File was not found. Do you want to show directory with your Music?")
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                audio = r.listen(source)
+            try:
+                print("Recognizing...")
+                speak("Recognizing...")
+                query = r.recognize_google(audio, language = 'en')
+                print(f"user said: {query}\n")
+            except Exception as e:
+                print("Repeat")
+                speak("repeat please")
+        if 'yes' in query.lower():
+            speak("Where is music?")
+            songs_dir = input("Where is music? ")
+            f = open("songs.txt", "w")
+            f.write(songs_dir)
+            f.close()
             songs = os.listdir(songs_dir)
             os.startfile(os.path.join(songs_dir, songs[0]))
-            f.close()
             main()
+        if 'no' in query.lower():
+                main()
         else:
-            speak("Something wrong with the file")
-            speak("setting file to read mode")
-            f = open("songs.txt", "r")
             main()
-    except IOError:
-        speak("File was not found. Do you want to show directory with your Music?")
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            audio = r.listen(source)
-        try:
-            print("Recognizing...")
-            speak("Recognizing...")
-            query = r.recognize_google(audio, language = 'en')
-            print(f"user said: {query}\n")
-        except Exception as e:
-            print("Repeat")
-            speak("repeat please")
-    if 'yes' in query.lower():
-        speak("Where is music?")
-        songs_dir = input("Where is music? ")
-        f = open("songs.txt", "w")
-        f.write(songs_dir)
-        f.close()
-        songs = os.listdir(songs_dir)
-        os.startfile(os.path.join(songs_dir, songs[0]))
+    elif 'goodbye' in query.lower():
+        speak("Goodbye "+MASTER)
+    elif 'time' in query.lower():
+        time = datetime.datetime.now().strftime("%H:%M")
+        print("It is now " + time)
+        speak( "It is now " + time)
         main()
-    if 'no' in query.lower():
-            main()
     else:
-        main()
-elif 'goodbye' in query.lower():
-    speak("Goodbye")
-elif 'time' in query.lower():
-    time = datetime.datetime.now().strftime("%H:%M")
-    print("It is now " + time)
-    speak( "It is now " + time)
-    przyjmijRozkaz()
-else:
-    speak("Goodbye "+MASTER)
+        speak("Goodbye "+MASTER)
     
-
-    
-    
-    
+main()
