@@ -118,7 +118,8 @@ elif 'time' in query.lower():
     speak( "It is now " + time)
     przyjmijRozkaz()
 else:
-    speak("Goodbye")
+    speak("Goodbye "+MASTER)
+    
 
     
     
